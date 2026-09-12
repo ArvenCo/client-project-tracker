@@ -22,9 +22,25 @@ class ProjectController extends Controller
         return Inertia::render('projects/projects');
     }
     //
-    public function getProjects()
+    public function getProjects(Request $request)
     {
-        return Project::orderByDesc('created_at')->get();
+        $query = Project::query();
+         $query->when(
+            $request->has('status'),
+            fn($q) => $q->where('status', '=', $request->query('status'))
+        );
+
+        $query->when(
+            $request->has('priority'),
+            fn($q) => $q->where('priority', '=', $request->query('priority'))
+        );
+
+        $query->when($request->has('search'), fn($q) => 
+            $q->where('project_name', 'ILIKE', $request->query('search'))
+            ->orWhere('client_name', 'ILIKE', $request->query('search'))
+        );
+        
+        return $query->orderByDesc('created_at')->get();
     }
 
     public function createProject(Request $request)

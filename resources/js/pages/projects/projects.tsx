@@ -19,13 +19,37 @@ import { ProjectContext } from './project-context';
 import { DeleteProject } from './delete-project';
 import { SearchInput } from '@/components/search-input';
 import { toast } from 'sonner';
+import { FilterProjects, ProjectFilters } from "./filter-projects";
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
+    const [search, setSearch] = useState<string>();
+    const [filters, setFilters] = useState<ProjectFilters>({
+        status: null,
+        priority: null,
+    });
 
-    async function fetchProjects() {
+    async function fetchProjects(nextFilters: ProjectFilters = filters) {
         try {
-            const response = await fetch(getProjects.url());
+            const params = new URLSearchParams();
+
+            if (search?.trim()) {
+                params.set("search", search.trim());
+            }
+
+            if (nextFilters.status) {
+                params.set("status", nextFilters.status);
+            }
+
+            if (nextFilters.priority) {
+                params.set("priority", nextFilters.priority);
+            }
+
+            const queryString = params.toString();
+            const response = await fetch(
+                queryString ? `${getProjects.url()}?${queryString}` : getProjects.url()
+            );
+
             const result = (await response.json()) as Project[];
             setProjects(result);
         } catch (err) {
@@ -42,8 +66,22 @@ export default function Projects() {
             <Head title="Projects" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className='flex justify-end gap-4'>
-                    
-                    <SearchInput />
+                    <FilterProjects
+                        value={filters}
+                        onApply={(nextFilters) => {
+                            setFilters(nextFilters);
+                            fetchProjects(nextFilters);
+                        }}
+                        onReset={() => {
+                            const cleared = { status: null, priority: null };
+                            setFilters(cleared);
+                            fetchProjects(cleared);
+                        }}
+                    />
+                    <SearchInput
+                        onApply={() => fetchProjects(filters)} 
+                        onChange={(e)=> setSearch(e.target.value.trim())}
+                    />
                     <CreateProject onSuccess={fetchProjects}/>
                 </div>
                 <Table>
