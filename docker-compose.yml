@@ -1,0 +1,18 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: client-project-tracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5442:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+    driver: local
