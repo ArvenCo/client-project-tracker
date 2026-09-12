@@ -2,6 +2,13 @@
 
 A Laravel + React/Inertia application for managing client projects, tracking dates, filtering records, and creating or updating project information from a dashboard UI.
 
+## Requirements
+
+- PHP 8.3 or newer
+- Composer 2.x
+- Node.js 22.x LTS (recommended; Docker installs this automatically)
+- npm 10+ (or pnpm if you prefer the package manager workflow)
+
 ## Setup Instructions
 
 ### Option 1: Run with Docker
