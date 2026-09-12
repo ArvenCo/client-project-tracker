@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getProjects, index } from '@/actions/App/Http/Controllers/ProjectController';
 import { Project } from '@/types/project';
 import { format } from 'date-fns';
+import { CreateProject } from './create-project';
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -26,6 +27,9 @@ export default function Projects() {
         <>
             <Head title="Projects" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <div className='flex justify-end'>
+                    <CreateProject onSuccess={fetchProjects}/>
+                </div>
                 <Table>
                     <TableHeader>
                         <TableRow>

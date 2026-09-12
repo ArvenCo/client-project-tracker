@@ -9,7 +9,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::get('/', [ProjectController::class, 'index'])->name('projects.page');
     Route::controller(ProjectController::class)->prefix('projects')->group(function(){
-        Route::get('projects/', 'getProjects')->name('projects.all');
+        Route::get('/', 'getProjects')->name('projects.all');
+        Route::post('/', 'createProject')->name('project.create');
     });
 
 });
