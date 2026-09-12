@@ -32,8 +32,9 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
-import { dashboard } from '@/routes';
+
 import type { BreadcrumbItem, NavItem } from '@/types';
+import { index } from '@/actions/App/Http/Controllers/ProjectController';
 
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
@@ -41,8 +42,8 @@ type Props = {
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Projects',
+        href: index(),
         icon: LayoutGrid,
     },
 ];

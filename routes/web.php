@@ -11,6 +11,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::controller(ProjectController::class)->prefix('projects')->group(function(){
         Route::get('/', 'getProjects')->name('projects.all');
         Route::get('/{id}', 'getProject')->name('project.find');
+        Route::post('/pagination', 'projectPagination')->name('project.pagination');
         Route::post('/', 'createProject')->name('project.create');
         Route::put('/{id}', 'updateProject')->name('project.update');
         Route::delete('/{id}', 'deleteProject')->name('project.delete');

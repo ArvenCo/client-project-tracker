@@ -19,3 +19,9 @@ export type AuthLayoutProps = {
     title?: string;
     description?: string;
 };
+
+export interface PaginateResponse<T> {
+    data: T[]
+    next_cursor: string|null;
+    prev_cursor: string|null;
+}

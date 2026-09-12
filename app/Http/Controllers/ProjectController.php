@@ -24,23 +24,33 @@ class ProjectController extends Controller
     //
     public function getProjects(Request $request)
     {
+        return Project::all();
+    }
+
+    public function projectPagination(Request $request)
+    {
         $query = Project::query();
-         $query->when(
-            $request->has('status'),
-            fn($q) => $q->where('status', '=', $request->query('status'))
+        $status = $request->input('status');
+        $priority = $request->input('priority');
+        $search = $request->input('search');
+        $cursor = $request->input('cursor');
+
+        $query->when(
+            filled($status),
+            fn($q) => $q->where('status', '=', $status)
         );
 
         $query->when(
-            $request->has('priority'),
-            fn($q) => $q->where('priority', '=', $request->query('priority'))
+            filled($priority),
+            fn($q) => $q->where('priority', '=', $priority)
         );
 
-        $query->when($request->has('search'), fn($q) => 
-            $q->where('project_name', 'ILIKE', $request->query('search'))
-            ->orWhere('client_name', 'ILIKE', $request->query('search'))
+        $query->when(filled($search), fn($q) =>
+            $q->where('project_name', 'ILIKE', "%{$search}%")
+            ->orWhere('client_name', 'ILIKE', "%{$search}%")
         );
 
-        return $query->orderByDesc('created_at')->get();
+        return $query->cursorPaginate(10, ['*'], 'cursor', $cursor);
     }
 
     public function getProject(int $id)
