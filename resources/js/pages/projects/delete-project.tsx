@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useContext, useState } from "react";
 import { ProjectContext } from "./project-context";
 import useForm from "@/hooks/use-form";
+import { toast } from "sonner";
 
 interface DeleteProjectProps {
     open: boolean;
@@ -32,6 +33,7 @@ function DeleteProject({ open, onOpenChange, onSuccess }: DeleteProjectProps) {
                 onSuccess?.();
                 onOpenChange?.(false);
                 setConfirmation("");
+                toast.success("Project deleted successfully.")
             },
         })
 

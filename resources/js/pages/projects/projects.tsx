@@ -17,6 +17,8 @@ import { Ellipsis, Eye, PencilLine, Trash2 } from 'lucide-react';
 import { EditProject } from './edit-project';
 import { ProjectContext } from './project-context';
 import { DeleteProject } from './delete-project';
+import { SearchInput } from '@/components/search-input';
+import { toast } from 'sonner';
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -27,7 +29,7 @@ export default function Projects() {
             const result = (await response.json()) as Project[];
             setProjects(result);
         } catch (err) {
-            console.error('Failed to fetch projects', err);
+            toast.error('Failed to fetch projects', { });
         }
     }
 
@@ -39,7 +41,9 @@ export default function Projects() {
         <>
             <Head title="Projects" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className='flex justify-end'>
+                <div className='flex justify-end gap-4'>
+                    
+                    <SearchInput />
                     <CreateProject onSuccess={fetchProjects}/>
                 </div>
                 <Table>

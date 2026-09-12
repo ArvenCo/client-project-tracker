@@ -35,7 +35,7 @@ function CreateProject({ onSuccess }: CreateProjectProps){
                 onSuccess?.();
                 setIsOpen(false);
                 resetAndClearErrors();
-                toast("Project created successfully.");
+                toast.success("Project created successfully.");
                 
             },
         });

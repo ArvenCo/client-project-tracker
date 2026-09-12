@@ -48,7 +48,7 @@ function EditProject({ open, onOpenChange, onSuccess }: EditProjectProps) {
             onSuccess(){
                 onSuccess?.();
                 onOpenChange?.(false);
-                toast(`Project updated successfully.`)
+                toast.success(`Project updated successfully.`)
                 resetAndClearErrors()
             }
         })
