@@ -1,5 +1,35 @@
 services:
 
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: client_project_tracker_app
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: laravel
+      DB_USERNAME: user
+      DB_PASSWORD: password
+    command: >
+      sh -c "composer install --no-interaction --prefer-dist --no-progress && \
+      npm install && \
+      php artisan key:generate --force && \
+      php artisan migrate --force && \
+      npm run build && \
+      php artisan serve --host=0.0.0.0 --port=8000"
+
   db:
     image: postgres:16-alpine
     container_name: client-project-tracker-db
