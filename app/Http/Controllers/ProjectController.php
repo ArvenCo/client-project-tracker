@@ -15,7 +15,7 @@ class ProjectController extends Controller
     //
     public function getProjects()
     {
-        return Project::all();
+        return Project::orderByDesc('created_at')->get();
     }
 
     public function createProject(Request $request)

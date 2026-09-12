@@ -34,7 +34,7 @@ function CreateProject({ onSuccess }: CreateProjectProps){
             onSuccess() {
                 onSuccess?.();
                 setIsOpen(false);
-                resetAndClearErrors;
+                resetAndClearErrors();
                 toast("Project created successfully.");
                 
             },
@@ -59,14 +59,14 @@ function CreateProject({ onSuccess }: CreateProjectProps){
                         <FieldLabel>
                             Client Name
                         </FieldLabel>
-                        <Input type="text" onChange={(e) => setData({ ...data, client_name: e.currentTarget.value })}/>
+                        <Input type="text" onChange={(e) => setData({ ...data, client_name: e.currentTarget.value })} aria-invalid={errors.client_name != undefined}/>
                         <FieldError children={errors.client_name} />
                     </Field>
                     <Field>
                         <FieldLabel>
                             Project Name
                         </FieldLabel>
-                        <Input type="text" onChange={(e) => setData({ ...data, project_name: e.currentTarget.value })}/>
+                        <Input type="text" onChange={(e) => setData({ ...data, project_name: e.currentTarget.value })} aria-invalid={errors.project_name != undefined}/>
                         <FieldError children={errors.project_name} />
                     </Field>
                     <Field>
@@ -109,7 +109,7 @@ function CreateProject({ onSuccess }: CreateProjectProps){
                         <FieldLabel>
                             Due Date
                         </FieldLabel>
-                        <DatePicker onSelect={(v) => setData({ ...data, due_date: v})}/>
+                        <DatePicker onSelect={(v) => setData({ ...data, due_date: v})} aria-invalid={errors.due_date != undefined}/>
                         <FieldError children={errors.due_date} />
                     </Field>
                 </div>
