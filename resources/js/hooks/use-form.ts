@@ -129,7 +129,7 @@ export default function useForm<TForm extends FormData>(routeOrData: RequestRout
 
         try {
             const rawPayload = Object.fromEntries(
-                Object.keys(defaults.current).map((field) => [field, cloneValue(fields[field as keyof TForm])])
+                Object.entries(fields as Record<string, unknown>).map(([field, value]) => [field, cloneValue(value)])
             );
 
             // Dynamic payload structural adjustment for files

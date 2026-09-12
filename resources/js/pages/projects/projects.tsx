@@ -5,6 +5,18 @@ import { getProjects, index } from '@/actions/App/Http/Controllers/ProjectContro
 import { Project } from '@/types/project';
 import { format } from 'date-fns';
 import { CreateProject } from './create-project';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from '@/components/ui/button';
+import { Ellipsis, Eye, PencilLine, Trash2 } from 'lucide-react';
+import { EditProject } from './edit-project';
+import { ProjectContext } from './project-context';
+import { DeleteProject } from './delete-project';
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
@@ -39,17 +51,23 @@ export default function Projects() {
                             <TableHead>Priority</TableHead>
                             <TableHead>Start Date</TableHead>
                             <TableHead>Due Date</TableHead>
+                            <TableHead>Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {projects.map((p) => (
-                            <TableRow key={p.id}>
-                                <TableCell>{p.client_name}</TableCell>
-                                <TableCell>{p.project_name}</TableCell>
-                                <TableCell>{p.status}</TableCell>
-                                <TableCell>{p.priority}</TableCell>
-                                <TableCell>{p.start_date ? format(p.start_date, 'PPP') : ''}</TableCell>
-                                <TableCell>{p.due_date ? format(p.due_date, 'PPP') : ''}</TableCell>
+                        {projects.map((project) => (
+                            <TableRow key={project.id}>
+                                <TableCell>{project.client_name}</TableCell>
+                                <TableCell>{project.project_name}</TableCell>
+                                <TableCell>{project.status}</TableCell>
+                                <TableCell>{project.priority}</TableCell>
+                                <TableCell>{project.start_date ? format(project.start_date, 'PPP') : ''}</TableCell>
+                                <TableCell>{project.due_date ? format(project.due_date, 'PPP') : ''}</TableCell>
+                                <TableCell>
+                                    <ProjectContext.Provider value={project}>
+                                        <ActionDropdownMenu onSuccess={fetchProjects}/>
+                                    </ProjectContext.Provider>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -65,3 +83,72 @@ Projects.layout = {
         href: index(),
     }],
 };
+
+
+interface ActionDropdownMenuProps {
+    onSuccess?: () => void,
+}
+
+function ActionDropdownMenu({ onSuccess }: ActionDropdownMenuProps ) {
+    const [isEditProjectOpen, setIsEditProjectOpen] = useState(false);
+    const [isDeleteProjectOpen, setIsDeleteProjectOpen] = useState(false);
+
+    return <>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Open project actions"
+                    className="size-8"
+                >
+                    <Ellipsis className="size-4" />
+                </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-44">
+
+                <DropdownMenuItem
+                    onClick={() => {
+                        setIsEditProjectOpen(true);
+                    }}
+                >
+                    <PencilLine className="size-4" />
+                    Edit
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                    variant="destructive"
+                    onClick={() => {
+                        setIsDeleteProjectOpen(true);
+                    }}
+                >
+                    <Trash2 className="size-4" />
+                    Delete
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+        <EditProject
+            open={isEditProjectOpen}
+            onOpenChange={(open) => {
+                setIsEditProjectOpen(open)
+            }}
+            onSuccess={() => {
+                setIsEditProjectOpen(false);
+                onSuccess?.()
+            }}
+        />
+        <DeleteProject
+            open={isDeleteProjectOpen}
+            onOpenChange={(open) => {
+                setIsDeleteProjectOpen(open)
+            }}
+            onSuccess={() => {
+                setIsDeleteProjectOpen(false);
+                onSuccess?.()
+            }}
+        />
+    </>;
+}
