@@ -39,8 +39,13 @@ class ProjectController extends Controller
             $q->where('project_name', 'ILIKE', $request->query('search'))
             ->orWhere('client_name', 'ILIKE', $request->query('search'))
         );
-        
+
         return $query->orderByDesc('created_at')->get();
+    }
+
+    public function getProject(int $id)
+    {
+        return Project::findOrFail($id);
     }
 
     public function createProject(Request $request)
